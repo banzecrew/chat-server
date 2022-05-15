@@ -14,6 +14,8 @@ object HttpServerRoutingMinimal:
     implicit val system = ActorSystem(Behaviors.empty, "my-system")
     implicit val executionContext = system.executionContext
 
+    val (addr, port) = ("localhost", 8080)
+
     val greeter = 
       Flow[Message]
         .collect {
@@ -27,7 +29,7 @@ object HttpServerRoutingMinimal:
         }
       }
 
-    val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
+    val bindingFuture = Http().newServerAt(addr, port).bind(route)
 
     println(s"Server now online.")
     StdIn.readLine() // let it run until user presses return
