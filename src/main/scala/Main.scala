@@ -2,13 +2,15 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.*
-import akka.http.scaladsl.model.ws.{ TextMessage, Message }
+import akka.http.scaladsl.model.ws.{TextMessage, Message}
 import akka.http.scaladsl.server.Directives.*
-import akka.stream.scaladsl.{ Source, Flow }
+import akka.http.scaladsl.server.Route
+import akka.stream.scaladsl.{Source, Flow}
+
 import scala.io.StdIn
 import scala.concurrent.ExecutionContextExecutor
 
-object HttpServerRoutingMinimal:
+object WSServer:
 
   def main(args: Array[String]): Unit =
 
@@ -23,9 +25,9 @@ object HttpServerRoutingMinimal:
           case tm: TextMessage =>
             TextMessage(Source.single("Hello ") ++ tm.textStream)
         }
-      
-    val route =
-      path("hello") {
+
+    val route: Route =
+      pathSingleSlash {
         get {
           handleWebSocketMessages(greeter)
         }
