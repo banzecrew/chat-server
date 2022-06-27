@@ -4,6 +4,7 @@ val scala3Version = "3.1.2"
 
 val AkkaVersion = "2.6.18"
 val AkkaHttpVersion = "10.2.9"
+val PprintVersion = "0.7.0"
 
 lazy val root = project
   .in(file("."))
@@ -18,6 +19,9 @@ lazy val root = project
 
       ("com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion).cross(CrossVersion.for3Use2_13),
       ("com.typesafe.akka" %% "akka-stream" % AkkaVersion).cross(CrossVersion.for3Use2_13),
-      ("com.typesafe.akka" %% "akka-http" % AkkaHttpVersion).cross(CrossVersion.for3Use2_13)
+      ("com.typesafe.akka" %% "akka-http" % AkkaHttpVersion).cross(CrossVersion.for3Use2_13),
+      ("com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion).cross(CrossVersion.for3Use2_13),
+
+      "com.lihaoyi" %% "pprint" % PprintVersion
     )
   )
