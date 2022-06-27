@@ -52,7 +52,7 @@ object WSServer:
     //val (addr, port) = ("192.168.10.107", 8080)
     val (addr, port) = ("localhost", 8080)
 
-    val greeter: Flow[Message, Message, NotUsed] =
+    val handler: Flow[Message, Message, NotUsed] =
       Flow[Message]
         .mapAsync(1) {
           case text: TextMessage.Strict =>
@@ -65,18 +65,18 @@ object WSServer:
         }
 
     val route: Route =
-      path("api") {
-        extractClientIP { entity =>
-          pprint.pprintln(entity)
-          handleWebSocketMessages(greeter)
-        }
-      } ~
-      get {
-        pathSingleSlash {
-          complete(HttpEntity(ContentTypes.`text/html(UTF-8)` , html))
-        }
-      } ~
-      complete(HttpEntity(ContentTypes.`text/html(UTF-8)` , "Page not found"))
+      extractClientIP { remoteIp =>
+        path("api") {
+          pprint.pprintln(remoteIp)
+          handleWebSocketMessages(handler)
+        } ~
+        get {
+          pathSingleSlash {
+            complete(HttpEntity(ContentTypes.`text/html(UTF-8)` , html))
+          }
+        } ~
+        complete(HttpEntity(ContentTypes.`text/html(UTF-8)` , "Page not found"))
+      }
 
     val bindingFuture = Http().newServerAt(addr, port).bind(route)
 
